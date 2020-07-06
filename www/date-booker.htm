@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <link rel="stylesheet" href="/css/main.css" type="text/css" />
+
+        <style>
+            textarea {width: 400px; height: 100px;}
+        </style>
+
+    </head>
+    <body>
+
+        <div class="title-bar-user-controls"></div>
+
+        <div class="main-body">
+
+            <h1>Add Gig</h1>
+
+            Status: 
+            <br>
+            <select id="input-status">
+                <option value="PROPOSED">Proposed</option>
+                <option value="CONFIRMED">Confirmed</option>
+                <option value="PLAYED">Played</option>
+            </select>
+
+            <br>
+            Who/What: 
+            <br>
+            <input id="input-whowhat">
+            <br>
+            When:
+            <br>
+            <input id="input-when">
+            <br>
+            Where:
+            <br>
+            <input id="input-where">
+            <br>
+            Equipment (PA? Stage?):
+            <br>
+            <input id="input-equipment">
+            <br>
+            Notes:
+            <br>
+            <textarea id="input-notes"></textarea>
+            <br>
+            
+            
+            <button id="submit-button">Submit</button>
+
+        </div>
+
+        <script src="/js/usercontrols.js"></script>
+
+        <script src="/js/omgservice.js"></script>
+        <script>
+
+        var gig = {type: "GIG"}
+
+        var inputs = {whowhat: document.getElementById("input-whowhat"),
+            when: document.getElementById("input-when"),
+            where: document.getElementById("input-where"),
+            equipment: document.getElementById("input-equipment"),
+            notes: document.getElementById("input-notes"),
+            status: document.getElementById("input-status"),
+            submit: document.getElementById("submit-button")
+        };
+
+        var setInputs = (data) => {
+            console.log(data)
+            inputs.whowhat.value = data.whowhat
+            inputs.when.value = data.when
+            inputs.where.value = data.where
+            inputs.equipment.value = data.equipment
+            inputs.notes.value = data.notes || ""
+            inputs.status.value = data.status
+        }
+
+        var getInputs = () => {
+            gig.whowhat = inputs.whowhat.value
+            gig.when = inputs.where.value
+            gig.where = inputs.where.value
+            gig.notes = inputs.notes.value
+            gig.equipment = inputs.equipment.value
+            gig.status = inputs.status.value
+        }
+
+        var setupPage = () => {
+            var params = omg.util.getPageParams();
+            if (params.id) {
+                omg.server.getId(params.id, function (response) {
+
+                    setInputs(response)
+
+                    gig = response
+                });
+            }
+        }
+
+        document.getElementById("submit-button").onclick = function () {
+            
+            if (!inputs.whowhat.value && !inputs.whowhat.when && !inputs.whowhat.where) {
+                alert("Look blank.")
+                return
+            }
+
+            getInputs()
+            
+            omg.server.post(gig, function (response) {
+                if (response.id) {
+                    window.location = "/view/" + response.id;
+                }
+            });
+        }
+
+        var userControls = document.getElementsByClassName("title-bar-user-controls")[0]
+        omg.ui.setupUserControls(userControls, setupPage, () => {
+            document.getElementsByClassName("main-body")[0].innerHTML = 
+                "<h3>" + userControls.innerHTML + "</h3>"
+        });
+        </script>
+    
+    </body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            html {height: 100%}
+            body {
+                display:flex;
+                flex-direction: column;
+                color:white;
+                background-color: #181818;
+                height:100%;
+                box-sizing: border-box;
+                overflow: hidden;
+                font-family: Arial, Helvetica, sans-serif;
+                margin: 0px;
+            }
+            #main-body {
+                display: flex;
+                flex-grow: 1;
+                height:1px;
+                box-sizing: border-box;
+                padding:10px;
+            }
+            .set {
+                border:1px solid transparent;
+                display:none;
+                width:1px;
+                flex-grow: 1;
+            }
+            .set-header {
+                margin:10px;
+                padding:10px;
+                position:relative;
+            }            
+            .song {
+                margin:10px;
+                padding:10px;
+                background-color: #fbf4eb;
+                color:black;
+                box-sizing: border-box;
+                border: 1px solid #808080;
+            }
+
+            #master-list {
+                overflow-y: scroll;
+                box-sizing: border-box;
+                width:180px;
+                font-size: 0.7em;
+                flex-grow: 0;
+            }
+            
+            #dnd-handler {
+                position: absolute;
+                top:0;
+                left:0;
+                bottom:0;
+                right:0;
+                display:none;
+            }
+
+            .song-bpm {
+                float:right;
+                font-size: 75%;
+                color:#404040;
+            }
+
+            .set-bpm-graph {
+                width: 100%;
+                height: 37px;
+                position:absolute;
+                top:0px;
+                left:0px;
+                z-index: -1;
+            }
+
+            .top-row {
+                padding: 10px;
+                border-bottom: 1px solid #808080;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="top-row">
+            SetList Name: <input id="setlist-name"> 
+            Set Count: <input id="set-count" type="number" value="3" min="1" max="4">
+            <button id="save-button">Save</button>
+        </div>
+        <div id="main-body">
+
+            <div class="set" id="master-list">
+                <div class="set-header">Master List</div>
+            </div>
+
+            <div class="set">
+                <div class="set-header">Set 1
+                    <canvas class="set-bpm-graph"></canvas>
+                </div>
+            </div>
+
+            <div class="set">
+                <div class="set-header">Set 2
+                    <canvas class="set-bpm-graph"></canvas>
+                </div>
+            </div>
+
+            <div class="set">
+                <div class="set-header">Set 3
+                    <canvas class="set-bpm-graph"></canvas>
+                </div>
+            </div>
+
+            <div class="set">
+                <div class="set-header">Set 4
+                    <canvas class="set-bpm-graph"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="dnd-handler"></div>
+
+        <script src="/js/omgservice.js"></script>
+
+        <script src="setlist.js"></script>
+    </body>
+</html>

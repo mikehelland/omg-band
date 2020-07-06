@@ -1,0 +1,9 @@
+{
+    "activities": [
+		{"name": "Date Booker", "url": "date-booker.htm", "edits": ["GIG"]},
+		{"name": "Set List Maker", "url": "setlist.htm", "edits": ["SETLIST"]},
+		{"name": "Song Info", "url": "songinfo.htm", "edits": ["SONGINFO"]},
+		{"name": "Embedded Gig Viewer", "url": "embed-gig.js", "embeds": ["GIG"]},
+		{"name": "Embedded Song Info Viewer", "url": "embed-songinfo.js", "embeds": ["SONGINFO"]}
+	]
+}

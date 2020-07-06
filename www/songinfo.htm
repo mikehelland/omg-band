@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <link rel="stylesheet" href="/css/main.css" type="text/css" />
+
+        <style>
+            textarea {width: 400px; height: 100px;}
+        </style>
+
+    </head>
+    <body>
+
+        <div class="title-bar-user-controls"></div>
+
+        <div class="main-body">
+
+            Status: 
+            <br>
+            <select id="input-status">
+                <option value="PROPOSED">Proposed</option>
+                <option value="CURRENT">Current</option>
+                <option value="OLD">Old</option>
+            </select>
+
+            <br>
+            Song Name:
+            <br>
+            <input id="input-name">
+            <br>
+            Singer:
+            <br>
+            <input id="input-singer">
+            <br>
+            Starts With:
+            <br>
+            <input id="input-starts">
+            <br>
+            BPM:
+            <br>
+            <input id="input-bpm">
+            <br>
+            Key:
+            <br>
+            <input id="input-key">
+            <br>
+            Tags:
+            <br>
+            <input id="input-tags">
+            <br>
+            Structure:
+            <br>
+            <textarea id="input-structure"></textarea>
+            <br>
+            Lyrics:
+            <br>
+            <textarea id="input-lyrics"></textarea>
+            <br>
+            Lights:
+            <br>
+            <textarea id="input-lights"></textarea>
+            <br>
+            Extras:
+            <br>
+            <textarea id="input-extras"></textarea>
+            <br>
+            
+            <button id="submit-button">Submit</button>
+
+        </div>
+
+        <script src="/js/usercontrols.js"></script>
+
+        <script src="/js/omgservice.js"></script>
+        <script>
+
+        var thing = {type: "SONGINFO"}
+
+        var inputs = {}
+        var bindings = [
+            "name", "singer", "starts", "bpm", "key", "tags", "structure", "lyrics", "lights", "extras"
+        ]
+        bindings.forEach(field => {
+            inputs[field] = document.getElementById("input-" + field)
+        })
+
+        var setInputs = (data) => {
+            bindings.forEach(field => {
+                inputs[field].value = data[field] || ""
+            })
+        }
+
+        var getInputs = () => {
+            bindings.forEach(field => {
+                thing[field] = inputs[field].value
+            })
+        }
+
+        var setupPage = () => {
+            var params = omg.util.getPageParams();
+            if (params.id) {
+                omg.server.getId(params.id, function (response) {
+
+                    setInputs(response)
+
+                    thing = response
+                });
+            }
+        }
+
+        document.getElementById("submit-button").onclick = function () {
+            
+            if (!inputs.name.value) {
+                alert("Look blank.")
+                return
+            }
+
+            getInputs()
+            
+            omg.server.post(thing, function (response) {
+                if (response.id) {
+                    window.location = "/view/" + response.id;
+                }
+            });
+        }
+
+        var userControls = document.getElementsByClassName("title-bar-user-controls")[0]
+        omg.ui.setupUserControls(userControls, setupPage, () => {
+            document.getElementsByClassName("main-body")[0].innerHTML = 
+                "<h3>" + userControls.innerHTML + "</h3>"
+        });
+        </script>
+    
+    </body>
+</html>
