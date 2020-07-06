@@ -76,6 +76,7 @@ if (params.id) {
         setCountInput.value = result.setCount || 3
         loadMasterList()
         loadSavedSets()
+        drawBPMGraphs()
     })
 }
 else {
@@ -112,6 +113,29 @@ let makeDraggable = (div, songInfo, sourceSet) => {
 }
 
 dndContext.ondown = (x,y, div, songInfo, sourceSet) => {
+    let now = Date.now()
+    dndContext.startedAt = now
+    dndContext.startedX = x
+    dndContext.startedY = y
+    dndContext.dX = 0
+    dndContext.dY = 0
+    setTimeout(() => {
+        if (dndContext.startedAt !== now) {
+            return
+        }
+
+        if (dndContext.dX < 20 && dndContext.dY < 20) {
+            //todo edit
+            dndContext.screenDiv.removeChild(dndContext.draggingDiv)
+            dndContext.screenDiv.style.display = "none"
+            dndContext.startedAt = 0
+            dndContext.draggingDiv = undefined
+            dndContext.div.style.opacity = 1
+    
+        }
+
+    }, 1000)
+
     dndContext.div = div
     dndContext.thing = songInfo
     dndContext.sourceSet = sourceSet
@@ -145,6 +169,13 @@ dndContext.onmove = (x, y) => {
 
     if (!dndContext.draggingDiv) {
         return
+    }
+
+    if (Math.abs(x - dndContext.startedX) > dndContext.dX) {
+        dndContext.dX = Math.abs(x - dndContext.startedX)
+    }
+    if (Math.abs(y - dndContext.startedY) > dndContext.dY) {
+        dndContext.dY = Math.abs(y - dndContext.startedY)
     }
 
     dndContext.draggingDiv.style.left = x - dndContext.draggingDiv.clientWidth / 2 - 10 + "px"
@@ -232,9 +263,16 @@ dndContext.onend = (x, y) => {
         dndContext.div.style.opacity = 1
     }
 
+    dndContext.startedAt = 0
     dndContext.draggingDiv = undefined
 }
 
+let drawBPMGraphs = () => {
+    drawBPMGraph(0)
+    drawBPMGraph(1)
+    drawBPMGraph(2)
+    drawBPMGraph(3)
+}
 let drawBPMGraph = (setI) => {
     let canvas = bpmGraphs[setI]
     let ctx = canvas.getContext("2d")
@@ -251,9 +289,11 @@ let drawBPMGraph = (setI) => {
     for (var i = 0; i < set.length; i++) {
         if (i === 0) {
             ctx.moveTo(0, canvas.height - (set[0].bpm / 200 * canvas.height))
+            ctx.lineTo(songLength, canvas.height - (set[i].bpm / 200 * canvas.height))
         }
         else {
             ctx.lineTo(i * songLength, canvas.height - (set[i].bpm / 200 * canvas.height))
+            ctx.lineTo((i + 1) * songLength, canvas.height - (set[i].bpm / 200 * canvas.height))
         }
     }
     ctx.stroke()
