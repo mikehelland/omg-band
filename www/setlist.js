@@ -101,42 +101,58 @@ let makeDraggable = (div, songInfo, sourceSet) => {
 
     div.onmousedown = e => {
         e.preventDefault()
-
-        dndContext.div = div
-        dndContext.thing = songInfo
-        dndContext.sourceSet = sourceSet
-        
-        div.style.opacity = 0.5
-        dndContext.draggingDiv = document.createElement("div")
-        dndContext.draggingDiv.innerHTML = div.innerHTML
-        dndContext.draggingDiv.className = "song"
-        dndContext.draggingDiv.style.position = "absolute"
-        dndContext.draggingDiv.style.pointerEvents = "none"
-        dndContext.screenDiv.appendChild(dndContext.draggingDiv)
-        dndContext.screenDiv.style.display = "block"
-        dndContext.draggingDiv.style.left = e.pageX - dndContext.draggingDiv.clientWidth / 2 - 10 + "px"
-        dndContext.draggingDiv.style.top = e.pageY - dndContext.draggingDiv.clientHeight / 2 - 10 + "px"
-        
+        dndContext.ondown(e.pageX, e.pageY, div, songInfo, sourceSet)
     }
+
+    div.addEventListener("touchstart", e => {
+        e.preventDefault()
+        dndContext.ondown(e.targetTouches[0].pageX, e.targetTouches[0].pageY, div, songInfo, sourceSet)
+
+    })
+}
+
+dndContext.ondown = (x,y, div, songInfo, sourceSet) => {
+    dndContext.div = div
+    dndContext.thing = songInfo
+    dndContext.sourceSet = sourceSet
     
+    dndContext.div.style.opacity = 0.5
+    dndContext.draggingDiv = document.createElement("div")
+    dndContext.draggingDiv.innerHTML = div.innerHTML
+    dndContext.draggingDiv.className = "song"
+    dndContext.draggingDiv.style.position = "absolute"
+    dndContext.draggingDiv.style.pointerEvents = "none"
+    dndContext.screenDiv.appendChild(dndContext.draggingDiv)
+    dndContext.screenDiv.style.display = "block"
+    dndContext.draggingDiv.style.left = x - dndContext.draggingDiv.clientWidth / 2 - 10 + "px"
+    dndContext.draggingDiv.style.top = y - dndContext.draggingDiv.clientHeight / 2 - 10 + "px"
+
 }
 
 dndContext.screenDiv.onmousemove = e => {
+    dndContext.onmove(e.pageX, e.pageY)
+}
+
+document.body.addEventListener("touchmove", e => {
+    dndContext.onmove(e.targetTouches[0].pageX, e.targetTouches[0].pageY)
+})
+
+dndContext.onmove = (x, y) => {
 
     if (dndContext.highlightedDiv) {
         dndContext.highlightedDiv.style.borderBottom = "initial"
     }
-    
+
     if (!dndContext.draggingDiv) {
         return
     }
 
-    dndContext.draggingDiv.style.left = e.pageX - dndContext.draggingDiv.clientWidth / 2 - 10 + "px"
-    dndContext.draggingDiv.style.top = e.pageY - dndContext.draggingDiv.clientHeight / 2 - 10 + "px"
+    dndContext.draggingDiv.style.left = x - dndContext.draggingDiv.clientWidth / 2 - 10 + "px"
+    dndContext.draggingDiv.style.top = y - dndContext.draggingDiv.clientHeight / 2 - 10 + "px"
 
     for (let i = allsets.length - 1; i >= 0; i--) {
         
-        if (e.pageX > setDivs[i].offsetLeft && e.pageX < setDivs[i].offsetLeft + setDivs[i].clientWidth) {
+        if (x > setDivs[i].offsetLeft && x < setDivs[i].offsetLeft + setDivs[i].clientWidth) {
             setDivs[i].style.border =  "1px solid #009900"
             dndContext.currentSet = i
             dndContext.currentSetDiv = setDivs[i]
@@ -144,7 +160,7 @@ dndContext.screenDiv.onmousemove = e => {
             let searching = true
             for (let j = allsets[i].length; j >= 0; j--) {
                 if (searching && 
-                            (e.pageY > setDivs[i].children[j].offsetTop + setDivs[i].children[j].clientHeight
+                            (y > setDivs[i].children[j].offsetTop + setDivs[i].children[j].clientHeight
                             || j === 0)) {
                     dndContext.highlightedDiv = setDivs[i].children[j]
                     dndContext.highlightedDiv.style.borderBottom = "30px solid #008800"
@@ -163,7 +179,18 @@ dndContext.screenDiv.onmousemove = e => {
     }
     
 }
+
 dndContext.screenDiv.onmouseup = e => {
+    dndContext.onend(e.pageX, e.pageY)
+}
+
+document.body.addEventListener("touchend", e => {
+    //dndContext.onend(e.targetTouches[0].pageX, e.targetTouches[0].pageY)
+    dndContext.onend()
+})
+
+dndContext.onend = (x, y) => {
+
     if (!dndContext.draggingDiv) {
         return 
     }

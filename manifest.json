@@ -4,6 +4,7 @@
 		{"name": "Set List Maker", "url": "setlist.htm", "edits": ["SETLIST"]},
 		{"name": "Song Info", "url": "songinfo.htm", "edits": ["SONGINFO"]},
 		{"name": "Embedded Gig Viewer", "url": "embed-gig.js", "embeds": ["GIG"]},
-		{"name": "Embedded Song Info Viewer", "url": "embed-songinfo.js", "embeds": ["SONGINFO"]}
+		{"name": "Embedded Song Info Viewer", "url": "embed-songinfo.js", "embeds": ["SONGINFO"]},
+		{"name": "Embedded SetList Viewer", "url": "embed-setlist.js", "embeds": ["SETLIST"]}
 	]
 }
