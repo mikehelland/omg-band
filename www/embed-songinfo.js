@@ -2,6 +2,7 @@ function OMGEmbeddedViewerGIG (viewer) {
     let data = viewer.data
     let html = `
     <style>.gig-caption{color: #606060;}</style>
+    <div class='omg-thing-p'>
     <span class="gig-caption">Status: </span>
     ${data.status || ""}
     <br>
@@ -19,7 +20,7 @@ function OMGEmbeddedViewerGIG (viewer) {
     <br>
     <span class="gig-caption">Key:</span>
     ${data.key || ""}
-    <br>
+    </div>
     `
 
     viewer.embedDiv.innerHTML = html
