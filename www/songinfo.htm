@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <link rel="stylesheet" href="/css/main.css" type="text/css" />
 
         <style>
@@ -126,6 +126,11 @@
 
         var userControls = document.getElementsByClassName("title-bar-user-controls")[0]
         omg.ui.setupUserControls(userControls, setupPage, () => {
+            if (!omg.user) {
+                omg.server.getUser(user => {
+                    window.location = "/signin.htm?fwd=" + encodeURIComponent(window.location.href)
+                })
+            }
             document.getElementsByClassName("main-body")[0].innerHTML = 
                 "<h3>" + userControls.innerHTML + "</h3>"
         });
