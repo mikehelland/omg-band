@@ -287,6 +287,10 @@ let drawBPMGraph = (setI) => {
     ctx.strokeStyle = "red"
     ctx.beginPath()
     for (var i = 0; i < set.length; i++) {
+        if (!set[i].bpm) {
+            continue
+        }
+
         if (i === 0) {
             ctx.moveTo(0, canvas.height - (set[0].bpm / 200 * canvas.height))
             ctx.lineTo(songLength, canvas.height - (set[i].bpm / 200 * canvas.height))
