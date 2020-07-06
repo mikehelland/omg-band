@@ -124,7 +124,7 @@ dndContext.ondown = (x,y, div, songInfo, sourceSet) => {
             return
         }
 
-        if (dndContext.dX < 20 && dndContext.dY < 20) {
+        if (dndContext.dX < 10 && dndContext.dY < 10) {
             //todo edit
             dndContext.screenDiv.removeChild(dndContext.draggingDiv)
             dndContext.screenDiv.style.display = "none"
@@ -181,6 +181,10 @@ dndContext.onmove = (x, y) => {
     dndContext.draggingDiv.style.left = x - dndContext.draggingDiv.clientWidth / 2 - 10 + "px"
     dndContext.draggingDiv.style.top = y - dndContext.draggingDiv.clientHeight / 2 - 10 + "px"
 
+    if (dndContext.dX < 10 && dndContext.dY < 10) {
+        return
+    }
+    
     for (let i = allsets.length - 1; i >= 0; i--) {
         
         if (x > setDivs[i].offsetLeft && x < setDivs[i].offsetLeft + setDivs[i].clientWidth) {
