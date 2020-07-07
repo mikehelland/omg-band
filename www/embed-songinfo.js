@@ -27,5 +27,5 @@ function OMGEmbeddedViewerGIG (viewer) {
 }
 
 if (typeof omg === "object" && omg.registerEmbeddedViewer) {
-    omg.registerEmbeddedViewer("SONGINFO", OMGEmbeddedViewerGIG)
+    omg.registerEmbeddedViewer("BANDSONG", OMGEmbeddedViewerGIG)
 }

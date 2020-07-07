@@ -19,7 +19,7 @@ setCountInput.onchange()
 
 let loadMasterList = (callback) => {
     let masterListDiv = document.getElementById("master-list")
-    fetch("/data?type=SONGINFO&perPage=200").then(res => res.json()).then(results => {
+    fetch("/data?type=BANDSONG&perPage=200").then(res => res.json()).then(results => {
         allsets[0] = results
         for (var i = results.length - 1; i >= 0; i--) {
             
