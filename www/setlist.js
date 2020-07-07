@@ -17,7 +17,7 @@ setCountInput.onchange = e => {
 }
 setCountInput.onchange()
 
-let loadMasterList = () => {
+let loadMasterList = (callback) => {
     let masterListDiv = document.getElementById("master-list")
     fetch("/data?type=SONGINFO&perPage=200").then(res => res.json()).then(results => {
         allsets[0] = results
@@ -32,6 +32,8 @@ let loadMasterList = () => {
             masterListDiv.appendChild(el)    
             makeDraggable(el, results[i], allsets[0])
         }
+
+        if (callback) callback()
     }).catch(e => console.error(e))
     
     document.getElementById("main-body").onmousedown = e=>e.preventDefault()
@@ -74,9 +76,10 @@ if (params.id) {
         allsets[4] = result.sets[3] || []
         document.getElementById("setlist-name").value = result.name || ""
         setCountInput.value = result.setCount || 3
-        loadMasterList()
-        loadSavedSets()
-        drawBPMGraphs()
+        loadMasterList(() => {
+            loadSavedSets()
+            drawBPMGraphs()
+        })
     })
 }
 else {
@@ -125,7 +128,7 @@ dndContext.ondown = (x,y, div, songInfo, sourceSet) => {
         }
 
         if (dndContext.dX < 10 && dndContext.dY < 10) {
-            //todo edit
+            editSongInfo(dndContext.thing, div)
             dndContext.screenDiv.removeChild(dndContext.draggingDiv)
             dndContext.screenDiv.style.display = "none"
             dndContext.startedAt = 0
@@ -335,12 +338,31 @@ document.getElementById("save-button").onclick = e => {
 }
 
 let isInSetList = songInfo => {
-    for (var i = 0; i < allsets.length - 1; i++) {
-        for (var j = 0; j < allsets[i + 1].length; j++) {
-            if (songInfo.name === allsets[i + 1][j].name) {
+    for (var i = 1; i < allsets.length; i++) {
+        for (var j = 0; j < allsets[i].length; j++) {
+            if (songInfo.id === allsets[i][j].id) {
+                allsets[i][j] = songInfo
                 return true
             }
         }
     }
     return false
+}
+
+let editSongInfo = (songInfo, div) => {
+
+    let editFrame = document.createElement("iframe")
+    editFrame.src = "songinfo.htm?id=" + songInfo.id
+ 
+    editFrame.style.width = "400px"
+    editFrame.style.height = "600px"
+    document.body.appendChild(editFrame)
+
+    omg.ui.showDialog(editFrame, () => {
+        omg.server.getId(songInfo.id, result => {
+            console.log(result)
+            div.innerHTML = result.name + "<div class='song-bpm'>" + result.bpm + "</div>"
+        })
+    })
+
 }
