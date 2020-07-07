@@ -250,7 +250,29 @@ dndContext.onend = (x, y) => {
     dndContext.screenDiv.style.display = "none"
     
     if (typeof dndContext.currentSet === "number") {
-        allsets[dndContext.currentSet].splice(dndContext.currentSong + 1, 0, dndContext.thing)
+        let sourceI = dndContext.sourceSet.indexOf(dndContext.thing)
+        
+        if (sourceI === -1) {
+            allsets[dndContext.currentSet].splice(dndContext.currentSong + 1, 0, dndContext.thing)    
+        }
+        else if (dndContext.sourceSet !== allsets[dndContext.currentSet]) {
+            dndContext.sourceSet.splice(sourceI, 1)
+            allsets[dndContext.currentSet].splice(dndContext.currentSong + 1, 0, dndContext.thing)    
+        }
+        else if (sourceI === dndContext.currentSong) {
+            //we're good
+        }
+        else if (sourceI < dndContext.currentSong) {
+            allsets[dndContext.currentSet].splice(dndContext.currentSong + 1, 0, dndContext.thing)
+            dndContext.sourceSet.splice(sourceI, 1)
+        }
+        else {
+            dndContext.sourceSet.splice(sourceI, 1)
+            allsets[dndContext.currentSet].splice(dndContext.currentSong + 1, 0, dndContext.thing)            
+        }
+
+        drawBPMGraphs()
+        
         dndContext.draggingDiv.style.position = "initial"
         
         if (dndContext.highlightedDiv) {
@@ -269,16 +291,8 @@ dndContext.onend = (x, y) => {
             oldDiv.parentElement.removeChild(oldDiv)
         }, 250)
         
-        let sourceI = dndContext.sourceSet.indexOf(dndContext.thing)
-        if (sourceI > -1) {
-            dndContext.sourceSet.splice(sourceI, 1)
-        }
-        
         makeDraggable(dndContext.draggingDiv, dndContext.thing, allsets[dndContext.currentSet])
 
-        if (dndContext.currentSet > 0) {
-            drawBPMGraph(dndContext.currentSet - 1)
-        }
         dndContext.currentSetDiv.style.border = "1px solid transparent"
         dndContext.currentSet = undefined
         dndContext.currentSetDiv = undefined
