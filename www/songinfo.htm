@@ -32,10 +32,6 @@
             <br>
             <input id="input-singer">
             <br>
-            Starts With:
-            <br>
-            <input id="input-starts">
-            <br>
             BPM:
             <br>
             <input id="input-bpm">
@@ -43,6 +39,17 @@
             Key:
             <br>
             <input id="input-key">
+            <br>
+            Starts With:
+            <br>
+            <input id="input-starts">
+            <br>
+            <br>
+            <button id="submit-button">Submit</button>
+
+            <hr>
+            More...
+            <br>
             <br>
             Tags:
             <br>
@@ -65,8 +72,6 @@
             <textarea id="input-extras"></textarea>
             <br>
             
-            <button id="submit-button">Submit</button>
-
         </div>
 
         <script src="/js/usercontrols.js"></script>
@@ -78,7 +83,7 @@
 
         var inputs = {}
         var bindings = [
-            "name", "singer", "starts", "bpm", "key", "tags", "structure", "lyrics", "lights", "extras"
+            "status", "name", "singer", "starts", "bpm", "key", "tags", "structure", "lyrics", "lights", "extras"
         ]
         bindings.forEach(field => {
             inputs[field] = document.getElementById("input-" + field)

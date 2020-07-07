@@ -8,21 +8,32 @@ let setCount
 let setDivs = document.getElementsByClassName("set")
 let bpmGraphs = document.getElementsByClassName("set-bpm-graph")
 
+let singerColors = ["blue", "yellow", "red", "green"]
+let singers = []
+
+
 let setCountInput = document.getElementById("set-count")
 setCountInput.onchange = e => {
     setCount = parseInt(setCountInput.value)
     for (var i = 0; i < setDivs.length; i++) {
         setDivs[i].style.display = i <= setCount ? "block" : "none"
-    }    i
+    }
 }
 setCountInput.onchange()
 
 let loadMasterList = (callback) => {
+
+    singers = []
+
     let masterListDiv = document.getElementById("master-list")
     fetch("/data?type=BANDSONG&perPage=200").then(res => res.json()).then(results => {
         allsets[0] = results
         for (var i = results.length - 1; i >= 0; i--) {
-            
+
+            if (results[i].singer && singers.indexOf(results[i].singer) === -1) {
+                singers.push(results[i].singer)
+            }
+
             if (edittingSetList && isInSetList(results[i])) {
                 results.splice(i, 1)
                 continue
@@ -49,6 +60,14 @@ let makeSongTile = songInfo => {
     let el = document.createElement('div')
     el.className = "song"
     el.innerHTML = songInfo.name
+    
+    if (songInfo.singer && singers.indexOf(songInfo.singer) > -1) {
+        el.style.borderLeft = "16px solid " + singerColors[singers.indexOf(songInfo.singer)]
+    }
+    else {
+        el.style.borderLeft = "16px solid transparent"
+    }
+    
     
     let bpm = document.createElement('div')
     bpm.className = "song-bpm"
@@ -388,7 +407,7 @@ let editSongInfo = (songInfo, div) => {
     editFrame.src = "songinfo.htm?id=" + songInfo.id
  
     editFrame.style.width = "400px"
-    editFrame.style.height = "600px"
+    editFrame.style.height = "80%"
     document.body.appendChild(editFrame)
 
     omg.ui.showDialog(editFrame, () => {
