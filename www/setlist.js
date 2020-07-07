@@ -36,8 +36,12 @@ let loadMasterList = (callback) => {
         if (callback) callback()
     }).catch(e => console.error(e))
     
-    document.getElementById("main-body").onmousedown = e=>e.preventDefault()
-    masterListDiv.onmousedown = e=>e.preventDefault()    
+    masterListDiv.onmousedown = e=> {
+        if (e.target.tagName !== "INPUT" && e.target.tagName !== "BUTTON") {
+            e.preventDefault()
+        }
+    }
+    document.getElementById("main-body").onmousedown = masterListDiv.onmousedown  
 }
 
 let makeSongTile = songInfo => {
@@ -256,8 +260,15 @@ dndContext.onend = (x, y) => {
         else {
             dndContext.currentSetDiv.appendChild(dndContext.draggingDiv)
         }
+        dndContext.draggingDiv.style.backgroundColor = "#008800"
         
-        dndContext.div.parentElement.removeChild(dndContext.div)
+        let draggedDiv = dndContext.draggingDiv
+        let oldDiv = dndContext.div
+        setTimeout(() => {
+            draggedDiv.style.backgroundColor = null
+            oldDiv.parentElement.removeChild(oldDiv)
+        }, 250)
+        
         let sourceI = dndContext.sourceSet.indexOf(dndContext.thing)
         if (sourceI > -1) {
             dndContext.sourceSet.splice(sourceI, 1)

@@ -49,8 +49,8 @@
                 overflow-y: scroll;
                 box-sizing: border-box;
                 width:1px;
-                font-size: 0.7em;
-                flex-grow: 0.5;
+                font-size: 0.8em;
+                flex-grow: 0.75;
             }
             
             #dnd-handler {
@@ -75,42 +75,56 @@
                 position:absolute;
                 top:0px;
                 left:0px;
-                z-index: -1;
             }
 
             .top-row {
                 padding: 5px 10px;
                 border-bottom: 1px solid #808080;
             }
+
+            #setlist-name, #set-count, #save-button {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            a {
+                color:white;
+            }
         </style>
     </head>
     <body>
-
-        <div class="top-row">
-            SetList Name: <input id="setlist-name"> 
-            Set Count: <input id="set-count" type="number" value="3" min="1" max="4">
-            <button id="save-button">Save</button>
-        </div>
         <div id="main-body">
 
             <div class="set" id="master-list">
-                <div class="set-header">Master List</div>
+                <div class="set-header">
+                    <a href="/">&lt; Home</a>
+                    <br>
+                    <br>
+                    SetList Name: <input id="setlist-name"> 
+                    Set Count: <input id="set-count" type="number" value="3" min="1" max="4">
+                    <button id="save-button">Save</button>
+        
+                    <br>
+                    <hr>
+                    <br>
+                    Master Song List
+                </div>
             </div>
 
             <div class="set">
-                <div class="set-header">Set 1
+                <div class="set-header">1
                     <canvas class="set-bpm-graph"></canvas>
                 </div>
             </div>
 
             <div class="set">
-                <div class="set-header">Set 2
+                <div class="set-header">2
                     <canvas class="set-bpm-graph"></canvas>
                 </div>
             </div>
 
             <div class="set">
-                <div class="set-header">Set 3
+                <div class="set-header">3
                     <canvas class="set-bpm-graph"></canvas>
                 </div>
             </div>
