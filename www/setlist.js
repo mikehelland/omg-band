@@ -198,10 +198,18 @@ dndContext.onmove = (x, y) => {
             let searching = true
             for (let j = allsets[i].length; j >= 0; j--) {
                 if (searching && 
-                            (y > setDivs[i].children[j].offsetTop + setDivs[i].children[j].clientHeight
+                            (y > setDivs[i].children[j].offsetTop + 
+                                setDivs[i].children[j].clientHeight -
+                                setDivs[i].scrollTop
                             || j === 0)) {
                     dndContext.highlightedDiv = setDivs[i].children[j]
+
                     dndContext.highlightedDiv.style.borderBottom = "30px solid #008800"
+                    
+                    if (j > allsets[i].length - 2 && setDivs[i].scrollHeight > setDivs[i].clientHeight) {
+                        setDivs[i].scrollTop = setDivs[i].scrollHeight
+                    }
+                        
                     searching = false
 
                     dndContext.currentSong = j - 1
