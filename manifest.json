@@ -3,8 +3,8 @@
 		{"name": "Date Booker", "url": "date-booker.htm", "edits": ["GIG"]},
 		{"name": "Set List Maker", "url": "setlist.htm", "edits": ["SETLIST"]},
 		{"name": "Song Info", "url": "songinfo.htm", "edits": ["BANDSONG"]},
-		{"name": "Embedded Gig Viewer", "url": "embed-gig.js", "embeds": ["GIG"]},
-		{"name": "Embedded Song Info Viewer", "url": "embed-songinfo.js", "embeds": ["BANDSONG"]},
-		{"name": "Embedded SetList Viewer", "url": "embed-setlist.js", "embeds": ["SETLIST"]}
+		{"name": "Embedded Gig Viewer", "url": "embed-gig.js", "className": "OMGEmbeddedViewerGIG", "embeds": ["GIG"]},
+		{"name": "Embedded Song Info Viewer", "url": "embed-songinfo.js", "className": "OMGEmbeddedViewerBANDSONG", "embeds": ["BANDSONG"]},
+		{"name": "Embedded SetList Viewer", "url": "embed-setlist.js", "className": "OMGEmbeddedViewerSETLIST", "embeds": ["SETLIST"]}
 	]
 }

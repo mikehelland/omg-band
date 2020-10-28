@@ -1,4 +1,4 @@
-function OMGEmbeddedViewerGIG (viewer) {
+function OMGEmbeddedViewerBANDSONG (viewer) {
     let data = viewer.data
     let html = `
     <style>.gig-caption{color: #606060;}</style>
@@ -24,8 +24,4 @@ function OMGEmbeddedViewerGIG (viewer) {
     `
 
     viewer.embedDiv.innerHTML = html
-}
-
-if (typeof omg === "object" && omg.registerEmbeddedViewer) {
-    omg.registerEmbeddedViewer("BANDSONG", OMGEmbeddedViewerGIG)
 }

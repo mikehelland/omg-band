@@ -12,7 +12,3 @@ console.log(data.setCount)
         viewer.embedDiv.appendChild(el)
     }
 }
-
-if (typeof omg === "object" && omg.registerEmbeddedViewer) {
-    omg.registerEmbeddedViewer("SETLIST", OMGEmbeddedViewerSETLIST)
-}

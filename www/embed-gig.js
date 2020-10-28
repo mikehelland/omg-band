@@ -27,9 +27,3 @@ function OMGEmbeddedViewerGIG (viewer) {
     viewer.embedDiv.innerHTML = html
 
 }
-
-if (typeof omg === "object" && omg.types) {
-    if (omg.types["GIG"]) {
-        omg.types["GIG"].embedClass = OMGEmbeddedViewerGIG
-    }
-}
