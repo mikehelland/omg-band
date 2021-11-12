@@ -4,7 +4,7 @@ function OMGEmbeddedViewerBANDSONG (viewer) {
     let attachments = ""
     if (data.attachments) {
         data.attachments.forEach(media => {
-            attachments += "<div>" + media.mimeType + " <a href='" + media.url + "'>" + media.name + "</a></div>"
+            attachments += "<div> * " + media.mimeType + " <a href='" + media.url + "'>" + media.name + "</a></div>"
             if (media.mimeType.startsWith("audio")) {
                 attachments += "<audio controls='' preload='none' src='" + media.url + "'></audio>"
             }
@@ -15,15 +15,12 @@ function OMGEmbeddedViewerBANDSONG (viewer) {
     let html = `
     <style>.gig-caption{color: #606060;}</style>
     <div class='omg-thing-p'>
-    <span class="gig-caption">Status: </span>
-    ${data.status || ""}
-    <br>
-    <span class="gig-caption">Name: </span>
-    ${data.name || ""}
-    <br>
     <span class="gig-caption">Attachments:</span>
     ${attachments}
     <hr>
+    <span class="gig-caption">Status: </span>
+    ${data.status || ""}
+    <br>
     <span class="gig-caption">Singer:</span>
     ${data.singer || ""}
     <span class="gig-caption">Starts With:</span>
