@@ -5,7 +5,17 @@
         <link rel="stylesheet" href="/css/main.css" type="text/css" />
 
         <style>
-            textarea {width: 300px; height: 100px;}
+            textarea {width: 600px; height: 100px;}
+            #dndupload {padding: 40px;
+            }
+            .drop-zone-hover {
+                padding: 30px !important;
+                border: 10px dashed #1db918;
+            }
+            .attachment {
+                border: 1px solid black;
+                padding: 10px;
+            }
         </style>
 
     </head>
@@ -45,11 +55,21 @@
             <input id="input-starts">
             <br>
             <br>
+            Attachments:
+            <div id="dndupload">(Drag and Drop Files Here)</div>
+            <div id="attachment-list"></div>
+            <br>
+            <br>
+
             <button id="submit-button">Submit</button>
 
             <hr>
             More...
             <br>
+            <br>
+            Lyrics:
+            <br>
+            <textarea id="input-lyrics"></textarea>
             <br>
             Tags:
             <br>
@@ -58,10 +78,6 @@
             Structure:
             <br>
             <textarea id="input-structure"></textarea>
-            <br>
-            Lyrics:
-            <br>
-            <textarea id="input-lyrics"></textarea>
             <br>
             Lights:
             <br>
@@ -77,9 +93,11 @@
         <script src="/js/usercontrols.js"></script>
 
         <script src="/js/omgservice.js"></script>
-        <script>
-
-        var thing = {type: "BANDSONG", editableBy: "allUsers"} //todo just a group?
+        
+        <script type="module">
+        import DnDUpload from "/js/dndupload.js"
+        
+        var thing = {type: "BANDSONG", editableBy: "allUsers", attachments: []} //todo just a group?
 
         var inputs = {}
         var bindings = [
@@ -93,6 +111,12 @@
             bindings.forEach(field => {
                 inputs[field].value = data[field] || ""
             })
+
+            if (!data.attachments) {
+                data.attachments = []
+            }
+
+            data.attachments.forEach(media => makeAttachmentEl(media))
         }
 
         var getInputs = () => {
@@ -109,6 +133,29 @@
                     setInputs(response)
 
                     thing = response
+
+
+
+                    dndupload.setupDropZone({
+                        thingId: thing.id, 
+                        div: dropZone,
+                        onstartupload: media => {
+                            if (!thing.attachments) {
+                                thing.attachments = []
+                            }
+                            thing.attachments.push(media)
+            
+                            var statusDiv = makeAttachmentEl(media)
+                            statusDiv.innerHTML = "Uploading..."
+                            return statusDiv
+                        },
+                        onfail: (media, statusDiv, message) => {
+                            statusDiv.innerHTML = "<font color='red'>Error</font> " + message
+                        },
+                        onsuccess: (media, statusDiv) => {
+                            statusDiv.innerHTML = "<font color='green'>Uploaded</font>" 
+                        }
+                    })
                 });
             }
         }
@@ -139,7 +186,27 @@
             document.getElementsByClassName("main-body")[0].innerHTML = 
                 "<h3>" + userControls.innerHTML + "</h3>"
         });
+        
+            var dndupload = new DnDUpload()
+            var dropZone = document.getElementById("dndupload")
+            var attachmentList = document.getElementById("attachment-list")
+
+
+            var makeAttachmentEl = media => {
+                var div = document.createElement("div")
+                div.className = "attachment"
+                attachmentList.appendChild(div)
+
+                div.innerHTML = media.mimeType + ": " + media.name + " <a href='" + media.url + "'>" + media.url + "</a>"
+                var statusDiv = document.createElement("div")
+                statusDiv.style.float = "right"
+                div.appendChild(statusDiv)
+                return statusDiv
+            }
+
+            
+
         </script>
-    
+        
     </body>
 </html>

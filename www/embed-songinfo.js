@@ -1,5 +1,14 @@
 function OMGEmbeddedViewerBANDSONG (viewer) {
     let data = viewer.data
+
+    let attachments = ""
+    if (data.attachments) {
+        data.attachments.forEach(media => {
+            attachments += "<div>" + media.mimeType + " <a href='" + media.url + "'>" + media.name + "</a></div>"
+        })
+    }
+
+
     let html = `
     <style>.gig-caption{color: #606060;}</style>
     <div class='omg-thing-p'>
@@ -20,6 +29,9 @@ function OMGEmbeddedViewerBANDSONG (viewer) {
     <br>
     <span class="gig-caption">Key:</span>
     ${data.key || ""}
+    <br>
+    <span class="gig-caption">Attachments:</span>
+    ${attachments}
     </div>
     `
 
