@@ -201,6 +201,20 @@
                 var statusDiv = document.createElement("div")
                 statusDiv.style.float = "right"
                 div.appendChild(statusDiv)
+
+                var removeDiv = document.createElement("div")
+                removeDiv.style.float = "right"
+                removeDiv.innerHTML = "Remove (X)"
+                div.appendChild(removeDiv)
+                
+                removeDiv.onclick = () => {
+                    attachmentList.removeChild(div)
+                    var i = thing.attachments.indexOf(media)
+                    if (i > -1) {
+                        thing.attachments.splice(i, 1)
+                    }
+                }
+
                 return statusDiv
             }
 

@@ -5,6 +5,9 @@ function OMGEmbeddedViewerBANDSONG (viewer) {
     if (data.attachments) {
         data.attachments.forEach(media => {
             attachments += "<div>" + media.mimeType + " <a href='" + media.url + "'>" + media.name + "</a></div>"
+            if (media.mimeType.startsWith("audio")) {
+                attachments += "<audio controls='' preload='none' src='" + media.url + "'></audio>"
+            }
         })
     }
 
