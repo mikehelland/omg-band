@@ -21,20 +21,18 @@ function OMGEmbeddedViewerBANDSONG (viewer) {
     <span class="gig-caption">Name: </span>
     ${data.name || ""}
     <br>
+    <span class="gig-caption">Attachments:</span>
+    ${attachments}
+    <hr>
     <span class="gig-caption">Singer:</span>
     ${data.singer || ""}
-    <br>
     <span class="gig-caption">Starts With:</span>
     ${data.starts || ""}
     <br>
     <span class="gig-caption">BPM:</span>
     ${data.bpm || ""}
-    <br>
     <span class="gig-caption">Key:</span>
     ${data.key || ""}
-    <br>
-    <span class="gig-caption">Attachments:</span>
-    ${attachments}
     </div>
     `
 
