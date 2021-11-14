@@ -134,28 +134,7 @@
 
                     thing = response
 
-
-
-                    dndupload.setupDropZone({
-                        thingId: thing.id, 
-                        div: dropZone,
-                        onstartupload: media => {
-                            if (!thing.attachments) {
-                                thing.attachments = []
-                            }
-                            thing.attachments.push(media)
-            
-                            var statusDiv = makeAttachmentEl(media)
-                            statusDiv.innerHTML = "Uploading..."
-                            return statusDiv
-                        },
-                        onfail: (media, statusDiv, message) => {
-                            statusDiv.innerHTML = "<font color='red'>Error</font> " + message
-                        },
-                        onsuccess: (media, statusDiv) => {
-                            statusDiv.innerHTML = "<font color='green'>Uploaded</font>" 
-                        }
-                    })
+                    uploadParameters.thingId = thing.id
                 });
             }
         }
@@ -187,37 +166,59 @@
                 "<h3>" + userControls.innerHTML + "</h3>"
         });
         
-            var dndupload = new DnDUpload()
-            var dropZone = document.getElementById("dndupload")
-            var attachmentList = document.getElementById("attachment-list")
+        var dndupload = new DnDUpload()
+        var dropZone = document.getElementById("dndupload")
+        var attachmentList = document.getElementById("attachment-list")
 
 
-            var makeAttachmentEl = media => {
-                var div = document.createElement("div")
-                div.className = "attachment"
-                attachmentList.appendChild(div)
+        var makeAttachmentEl = media => {
+            var div = document.createElement("div")
+            div.className = "attachment"
+            attachmentList.appendChild(div)
 
-                div.innerHTML = media.mimeType + ": " + media.name + " <a href='" + media.url + "'>" + media.url + "</a>"
-                var statusDiv = document.createElement("div")
-                statusDiv.style.float = "right"
-                div.appendChild(statusDiv)
-
-                var removeDiv = document.createElement("div")
-                removeDiv.style.float = "right"
-                removeDiv.innerHTML = "Remove (X)"
-                div.appendChild(removeDiv)
-                
-                removeDiv.onclick = () => {
-                    attachmentList.removeChild(div)
-                    var i = thing.attachments.indexOf(media)
-                    if (i > -1) {
-                        thing.attachments.splice(i, 1)
-                    }
+            div.innerHTML = media.mimeType + ": " + media.name + " <a href='" + media.url + "'>" + media.url + "</a>"
+            
+            var removeDiv = document.createElement("div")
+            removeDiv.style.float = "right"
+            removeDiv.innerHTML = "Remove (X)"
+            div.appendChild(removeDiv)
+            
+            removeDiv.onclick = () => {
+                attachmentList.removeChild(div)
+                var i = thing.attachments.indexOf(media)
+                if (i > -1) {
+                    thing.attachments.splice(i, 1)
                 }
-
-                return statusDiv
             }
 
+            var statusDiv = document.createElement("div")
+            statusDiv.style.float = "right"
+            div.appendChild(statusDiv)
+
+            return statusDiv
+        }
+
+        var uploadParameters = {
+            thingId: thing.id, 
+            div: dropZone,
+            onstartupload: media => {
+                if (!thing.attachments) {
+                    thing.attachments = []
+                }
+                thing.attachments.push(media)
+
+                var statusDiv = makeAttachmentEl(media)
+                statusDiv.innerHTML = "Uploading..."
+                return statusDiv
+            },
+            onfail: (media, statusDiv, message) => {
+                statusDiv.innerHTML = "<font color='red'>Error</font> " + message
+            },
+            onsuccess: (media, statusDiv) => {
+                statusDiv.innerHTML = "<font color='green'>Uploaded</font>" 
+            }
+        }
+        dndupload.setupDropZone(uploadParameters)
             
 
         </script>
