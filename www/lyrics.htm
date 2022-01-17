@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <body>
+
+        <div id="main-view"></div>
+
+        <script src="/js/omgservice.js"></script>
+        
+        <script>
+
+            var mainView = document.getElementById("main-view")
+
+            omg.getContext().then(ctx => {
+                if (!ctx.pageParams.id) {
+                    mainView.innerHTML = "(no id)"
+                    return
+                }
+
+                omg.server.getId(ctx.pageParams.id, data => {
+                    window.data = data
+                    var html = `<h1>${data.name || "(no title)"}</h1>`
+                    var lyrics = data.lyrics || "(no lyrics)"
+                    
+                    lyrics = lyrics.split("\n").join("<br>")
+
+                    mainView.innerHTML = html + lyrics 
+                })
+            })
+
+
+        </script>
+    </body>
+</html>

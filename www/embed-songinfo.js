@@ -11,10 +11,13 @@ function OMGEmbeddedViewerBANDSONG (viewer) {
         })
     }
 
+    var lyrics = data.lyrics ? `<a href="/apps/band/lyrics.htm?id=${data.id}" target="_blank">Lyrics</a><br>` : ""
+
 
     let html = `
     <style>.gig-caption{color: #606060;}</style>
     <div class='omg-thing-p'>
+    ${lyrics}
     <span class="gig-caption">Attachments:</span>
     ${attachments}
     <hr>
