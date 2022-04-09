@@ -26,6 +26,11 @@
             </select>
 
             <br>
+            Promote (eg, public gig, display on calendar): 
+            <br>
+            <input id="input-promote" type="checkbox">
+
+            <br>
             Who/What: 
             <br>
             <input id="input-whowhat">
@@ -60,6 +65,7 @@
         var gig = {type: "GIG"}
 
         var inputs = {whowhat: document.getElementById("input-whowhat"),
+            promote: document.getElementById("input-promote"),
             when: document.getElementById("input-when"),
             where: document.getElementById("input-where"),
             equipment: document.getElementById("input-equipment"),
@@ -76,6 +82,7 @@
             inputs.equipment.value = data.equipment
             inputs.notes.value = data.notes || ""
             inputs.status.value = data.status
+            inputs.promote.checked = data.promote
         }
 
         var getInputs = () => {
@@ -85,6 +92,7 @@
             gig.notes = inputs.notes.value
             gig.equipment = inputs.equipment.value
             gig.status = inputs.status.value
+            gig.promote = inputs.promote.checked
         }
 
         var setupPage = () => {

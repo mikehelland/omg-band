@@ -18,6 +18,9 @@ function OMGEmbeddedViewerGIG (viewer) {
     <span class="gig-caption">Where:</span>
     ${data.where}
     <br>
+    <span class="gig-caption">Promote:</span>
+    ${data.promote}
+    <br>
     <span class="gig-caption">Equipment:</span>
     ${data.equipment}
     <br>
