@@ -102,7 +102,6 @@
         };
 
         var setInputs = (data) => {
-            console.log(data)
             inputs.whowhat.value = data.whowhat
             inputs.when.value = data.when
             inputs.where.value = data.where
@@ -112,8 +111,9 @@
             inputs.promote.checked = data.promote
             inputs.ticketPrice.value = data.ticketPrice || ""
             
-
-            data.attachments.forEach(media => makeAttachmentEl(media))
+            if (data.attachments) {
+                data.attachments.forEach(media => makeAttachmentEl(media))
+            }
         }
 
         var getInputs = () => {
@@ -147,7 +147,7 @@
             }
 
             getInputs()
-            
+
             omg.server.post(gig, function (response) {
                 if (response.id) {
                     window.location = "/view/" + response.id;
