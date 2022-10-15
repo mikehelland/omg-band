@@ -187,6 +187,7 @@
 			var buyerEmailInput = document.getElementById("buyer-email")
 			
 			var ticketPrice
+			var gigId
 
 
 			omg.getContext().then(ctx => {
@@ -199,7 +200,7 @@
 				}
 
 				fetch("/data/" + ctx.pageParams.gig).then(res => res.json()).then(gig => {
-				
+					gigId = gig.id
 					var div = document.createElement("div")
 
 					var ticketsHTML = ""
@@ -234,7 +235,7 @@
 			})
 	
 			
-			const transactionAmount = 1
+			var buyerParams = {}
 
 			var payDiv = document.getElementById("pay")
 			var finishedDiv = document.getElementById("finished")
@@ -315,7 +316,8 @@
 								amount: ticketPrice * ticketCountInput.value,
 								nonce: nonce,
 								idempotency_key: idempotency_key,
-								location_id: "L8G6G7N2RXDZY"
+								location_id: "L8G6G7N2RXDZY",
+								params: buyerParams
 							})
 						})
 							.catch(err => {
@@ -371,7 +373,11 @@
 					return 
 				}
 
-				console.log(event)
+				buyerParams.email = buyerEmailInput.value
+				buyerParams.name = buyerNameInput.value
+				buyerParams.ticketCount = ticketCountInput.value
+				buyerParams.gig_id = gigId
+
 				payNowButton.disabled = true
 				paymentFailedDiv.innerHTML = ""
 				// Request a nonce from the SqPaymentForm object
