@@ -68,7 +68,7 @@ let makeSongTile = songInfo => {
         el.style.borderLeft = "16px solid transparent"
     }
     
-    
+    el.songInfo = songInfo
     let bpm = document.createElement('div')
     bpm.className = "song-bpm"
     bpm.innerHTML = songInfo.bpm
@@ -166,13 +166,15 @@ dndContext.ondown = (x,y, div, songInfo, sourceSet) => {
     dndContext.thing = songInfo
     dndContext.sourceSet = sourceSet
     
-    dndContext.div.style.opacity = 0.5
-    dndContext.draggingDiv = document.createElement("div")
-    dndContext.draggingDiv.innerHTML = div.innerHTML
-    dndContext.draggingDiv.className = "song"
+    //dndContext.div.style.opacity = 0.5
+    
+    dndContext.draggingDiv = div //document.createElement("div")
+    
+    //dndContext.draggingDiv.innerHTML = div.innerHTML
+    //dndContext.draggingDiv.className = "song"
     dndContext.draggingDiv.style.position = "absolute"
     dndContext.draggingDiv.style.pointerEvents = "none"
-    dndContext.screenDiv.appendChild(dndContext.draggingDiv)
+    //dndContext.screenDiv.appendChild(dndContext.draggingDiv)
     dndContext.screenDiv.style.display = "block"
     dndContext.draggingDiv.style.left = x - dndContext.draggingDiv.clientWidth / 2 - 10 + "px"
     dndContext.draggingDiv.style.top = y - dndContext.draggingDiv.clientHeight / 2 - 10 + "px"
@@ -264,7 +266,7 @@ dndContext.onend = (x, y) => {
         return 
     }
 
-    dndContext.screenDiv.removeChild(dndContext.draggingDiv)
+    //dndContext.screenDiv.removeChild(dndContext.draggingDiv)
 
     dndContext.screenDiv.style.display = "none"
     
@@ -307,7 +309,7 @@ dndContext.onend = (x, y) => {
         let oldDiv = dndContext.div
         setTimeout(() => {
             draggedDiv.style.backgroundColor = null
-            oldDiv.parentElement.removeChild(oldDiv)
+            //oldDiv.parentElement.removeChild(oldDiv)
         }, 250)
         
         makeDraggable(dndContext.draggingDiv, dndContext.thing, allsets[dndContext.currentSet])
