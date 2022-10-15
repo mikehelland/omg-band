@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>The Groove Surfers - Buy Tickets</title>
+	<meta name="viewport" 
+		content="width=device-width; initial-scale=1; maximum-scale=1; user-scalable=0;">
+
+	<style>
+		body {
+			padding: 0 5px;
+			margin: 0px;
+			background-color: #cccccc;
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 1.25em;
+		}
+
+		button, input {
+			font-size: 1.25em;
+		}
+
+		.main-body {
+			padding: 1em;
+			background-color: white;
+			max-width: 950px;
+			margin: auto;
+
+		}
+
+		#top {
+			font-size: 36px;
+			font-weight: bold;
+		}
+
+		#top-logo {
+			float: left;
+			padding-right: 8px;
+		}
+
+		h3 {
+			background-color: #eee;
+			padding: 3px;
+			border-bottom: 1px solid black;
+		}
+
+		.clear-float {
+			float: clear;
+		}
+
+		li {
+			padding: 2px;
+		}
+
+		.product-img {
+			padding-left: 8px;
+			width: 60%;
+			float: right;
+		}
+
+		.signup-caption {
+			width: 120px;
+			text-align: right;
+			display: inline-block;
+		}
+
+		.button-holder {
+			text-align: center;
+		}
+		button {
+			width: 350px;
+		}
+		#login-button, #create-account-button {
+			margin-left:120px;
+			display: block;
+		}
+
+		#pay iframe {
+			border: 1px solid black;
+			width: 340px;
+			margin-bottom: 1em;
+		}
+
+		#logged-in, #create-account, #pay, #account-created, #finished, #signup-failed, #have-account, #login-failed, #welcome-back {
+			display: none;
+		}
+		.success {
+			color:green;
+		}
+		#logged-in-as, #new-user-name {
+			font-weight: bold;
+		}
+
+		#processed-by-square {
+			color:#808080;
+		}
+
+		#payment-failed, #signup-failed, #login-failed {
+			color:red;
+		}
+		.cc-field {
+			display: flex;
+			padding-bottom: 0.5em;
+		}
+		.cc-caption {
+			width: 200px;
+			text-align: right;
+			
+		}
+		#page-content {
+			margin: auto;
+			/*width: 700px;*/
+		}
+
+	</style>
+
+	<script type="text/javascript" src="https://js.squareup.com/v2/paymentform">
+	</script>
+</head>
+
+<body>
+	<div class="main-body">
+
+
+		<a href="/"><img id="top-logo" src="logo.png">
+
+			<span id="top">The Groove Surfers Ticket Counter</span></a>
+		<br>
+		<i>The official place for GS tickets.</i>
+
+		<div class="clear-float">&nbsp;</div>
+
+		<h3>Buy Tickets for: <span id="whowhat"></h3>
+
+			<ul id="list">
+			</ul>
+		<hr>
+
+		<div id="page-content">
+		
+		<div id="pay">
+			<h4>Basic Info</h4>	
+
+			<div class="buyer-input"><input id="buyer-name" placeholder="Your Name"></div>
+			<div class="buyer-input"><input id="buyer-email" placeholder="Confirmation Email"></div>
+			<div class="buyer-input"><input min="1" value="1" type="number" id="ticket-count"></div>
+			<div>Total: $<span id="buyer-total"></span></div>
+			<h4>Credit Card Info</h4>
+
+
+			<div id="form-container">
+				<div id="sq-card-number"></div>
+				<br>
+				<div id="sq-expiration-date"></div>
+				<br>
+				<div id="sq-cvv"></div>
+				<br>
+				<div id="sq-postal-code"></div>
+				<div id="payment-failed">
+				
+				</div>
+	
+				<div class="button-holder"><button id="sq-creditcard" onclick="onGetCardNonce(event)">Pay Now</button></div>
+			</div>
+
+			<p id="processed-by-square">Processed securely with <a href="https://squareup.com">Square</a></p>
+		</div>
+
+		<div id="finished">
+			<p class="success">
+				Payment Success
+			</p>
+			<p>
+				You're all set!
+			</p>
+
+			<p>
+				Create a session in your <a href="/apps/musicroom/controlpanel.htm">Music Room Control Panel</a> to get going.
+			</p>
+		</div>
+		</div>
+
+		<script src="/js/omgservice.js"></script>
+		<script type="text/javascript">
+			var ticketCountInput = document.getElementById("ticket-count")
+			var buyerTotalSpan = document.getElementById("buyer-total")
+			var buyerNameInput = document.getElementById("buyer-name")
+			var buyerEmailInput = document.getElementById("buyer-email")
+			
+			var ticketPrice
+
+
+			omg.getContext().then(ctx => {
+				if (!ctx.pageParams.gig) {
+					return
+				}
+
+				ticketCountInput.onchange = e => {
+					buyerTotalSpan.innerHTML = ticketPrice * ticketCountInput.value
+				}
+
+				fetch("/data/" + ctx.pageParams.gig).then(res => res.json()).then(gig => {
+				
+					var div = document.createElement("div")
+
+					var ticketsHTML = ""
+					if (gig && gig.ticketPrice) {
+						if (typeof gig.ticketPrice === "number") {
+							ticketPrice = gig.ticketPrice
+						}
+						else if (typeof gig.ticketPrice === "string") {
+							ticketPrice = parseFloat(gig.ticketPrice.replace("$", ""))
+						}
+					}
+					else {
+						return
+					}
+
+					ticketCountInput.onchange()
+
+					div.className = "gig"
+					div.innerHTML = `
+						<li class="when">${gig.when}</li>
+						<li class="whowhat">${gig.whowhat}</li>
+						<li class="where">${gig.where}</li>
+						<li class="when">$${ticketPrice}</li>
+						${ticketsHTML}`
+
+					list.appendChild(div)
+
+					showPay()
+
+				})
+
+			})
+	
+			
+			const transactionAmount = 1
+
+			var payDiv = document.getElementById("pay")
+			var finishedDiv = document.getElementById("finished")
+			var paymentFailedDiv = document.getElementById("payment-failed")
+			
+			var payNowButton = document.getElementById("sq-creditcard")
+
+			function showPay() {
+				payDiv.style.display = "block"
+				paymentForm.build();
+			}
+
+			function finished() {
+				payDiv.style.display = "none"
+				finishedDiv.style.display = "block"
+			}
+
+			const idempotency_key = uuidv4();
+
+			// Create and initialize a payment form object
+			const paymentForm = new SqPaymentForm({
+				// Initialize the payment form elements
+
+				//TODO: Replace with your sandbox application ID
+				//applicationId: "sandbox-sq0idb-PA5xVSOSoSxpsNmfXFZJiw", 
+				applicationId: "sq0idp-IhO2ZCdQ68tl5F0SCEJIcA",
+				inputClass: 'sq-input',
+				autoBuild: false,
+				// Customize the CSS for SqPaymentForm iframe elements
+				inputStyles: [{
+					fontSize: '16px',
+					lineHeight: '24px',
+					padding: '16px',
+					placeholderColor: '#a0a0a0',
+					backgroundColor: 'transparent',
+				}],
+				// Initialize the credit card placeholders
+				cardNumber: {
+					elementId: 'sq-card-number',
+					placeholder: 'Card Number'
+				},
+				cvv: {
+					elementId: 'sq-cvv',
+					placeholder: 'CVV'
+				},
+				expirationDate: {
+					elementId: 'sq-expiration-date',
+					placeholder: 'MM/YY'
+				},
+				postalCode: {
+					elementId: 'sq-postal-code',
+					placeholder: 'Postal'
+				},
+				// SqPaymentForm callback functions
+				callbacks: {
+					/*
+					* callback function: cardNonceResponseReceived
+					* Triggered when: SqPaymentForm completes a card nonce request
+					*/
+					cardNonceResponseReceived: function (errors, nonce, cardData) {
+						if (errors) {
+							console.log(errors)
+							payNowButton.disabled = false
+							var errorString = "Encountered errors:<br>"
+							errors.forEach(function (error) {
+								errorString += '  ' + error.message + "<br>";
+							});
+							paymentFailedDiv.innerHTML = errorString
+							return;
+						}
+						fetch('/process-payment', {
+							method: 'POST',
+							headers: {
+								'Accept': 'application/json',
+								'Content-Type': 'application/json'
+							},
+							body: JSON.stringify({
+								amount: ticketPrice * ticketCountInput.value,
+								nonce: nonce,
+								idempotency_key: idempotency_key,
+								location_id: "L8G6G7N2RXDZY"
+							})
+						})
+							.catch(err => {
+								alert('Network error: ' + err);
+							})
+							.then(response => {
+								if (!response.ok) {
+									payNowButton.disabled = false
+									return response.json().then(
+										errorInfo => Promise.reject(errorInfo));
+								}
+								return response.json();
+							})
+							.then(data => {
+								if (!data || data.error) {
+									payNowButton.disabled = false
+									paymentFailedDiv.innerHTML = "Payment failed. " + (data.error || "")
+								}
+								else {
+									finished()
+								}
+							})
+							.catch(err => {
+								console.error(err);
+								payNowButton.disabled = false
+								paymentFailedDiv.innerHTML = "Payment failed. "
+								if (err.error) {
+									err.error.forEach(e => paymentFailedDiv.innerHTML += "<br>" + e.detail)
+								}
+							});
+
+					}
+				}
+			});
+
+			//Generate a random UUID as an idempotency key for the payment request
+			// length of idempotency_key should be less than 45
+			function uuidv4() {
+				return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+					var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+					return v.toString(16);
+				});
+			}
+
+			// onGetCardNonce is triggered when the "Pay $1.00" button is clicked
+			function onGetCardNonce(event) {
+
+				// Don't submit the form until SqPaymentForm returns with a nonce
+				event.preventDefault();
+
+				if (!buyerEmailInput.value || !buyerNameInput.value) {
+					paymentFailedDiv.innerHTML = "Payment failed.<br> A name and confirmation email are needed."
+					return 
+				}
+
+				console.log(event)
+				payNowButton.disabled = true
+				paymentFailedDiv.innerHTML = ""
+				// Request a nonce from the SqPaymentForm object
+				paymentForm.requestCardNonce();
+
+			}
+
+		</script>
+
+
+
+
+	</div>
+</body>
+
+</html>

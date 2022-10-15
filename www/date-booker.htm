@@ -6,6 +6,18 @@
 
         <style>
             textarea {width: 300px; height: 100px;}
+
+            #dndupload {padding: 40px;
+            }
+            .drop-zone-hover {
+                padding: 30px !important;
+                border: 10px dashed #1db918;
+            }
+            .attachment {
+                border: 1px solid black;
+                padding: 10px;
+            }
+
         </style>
 
     </head>
@@ -26,11 +38,6 @@
             </select>
 
             <br>
-            Promote (eg, public gig, display on calendar): 
-            <br>
-            <input id="input-promote" type="checkbox">
-
-            <br>
             Who/What: 
             <br>
             <input id="input-whowhat">
@@ -42,6 +49,14 @@
             Where:
             <br>
             <input id="input-where">
+            <br>
+            Promote (eg, public gig, display on calendar): 
+            <br>
+            <input id="input-promote" type="checkbox">
+            <br>
+            Ticket Price: 
+            <br>
+            <input id="input-ticketprice">
             <br>
             Equipment (PA? Stage?):
             <br>
@@ -55,12 +70,23 @@
             
             <button id="submit-button">Submit</button>
 
+            <br>
+            <br>
+            Attachments:
+            <div id="dndupload">(Drag and Drop Files Here)</div>
+            <div id="attachment-list"></div>
+            <br>
+            <br>
+
+
         </div>
 
         <script src="/js/usercontrols.js"></script>
 
         <script src="/js/omgservice.js"></script>
-        <script>
+        <script type="module">
+        import DnDUpload from "/js/dndupload.js"
+        
 
         var gig = {type: "GIG"}
 
@@ -71,7 +97,8 @@
             equipment: document.getElementById("input-equipment"),
             notes: document.getElementById("input-notes"),
             status: document.getElementById("input-status"),
-            submit: document.getElementById("submit-button")
+            submit: document.getElementById("submit-button"),
+            ticketPrice: document.getElementById("input-ticketprice")
         };
 
         var setInputs = (data) => {
@@ -83,6 +110,10 @@
             inputs.notes.value = data.notes || ""
             inputs.status.value = data.status
             inputs.promote.checked = data.promote
+            inputs.ticketPrice.value = data.ticketPrice || ""
+            
+
+            data.attachments.forEach(media => makeAttachmentEl(media))
         }
 
         var getInputs = () => {
@@ -93,6 +124,7 @@
             gig.equipment = inputs.equipment.value
             gig.status = inputs.status.value
             gig.promote = inputs.promote.checked
+            gig.ticketPrice = inputs.ticketPrice.value
         }
 
         var setupPage = () => {
@@ -131,6 +163,64 @@
             document.getElementsByClassName("main-body")[0].innerHTML = 
                 "<h3>" + userControls.innerHTML + "</h3>"
         });
+
+
+
+
+        var dndupload = new DnDUpload()
+        var dropZone = document.getElementById("dndupload")
+        var attachmentList = document.getElementById("attachment-list")
+        
+        var makeAttachmentEl = media => {
+            var div = document.createElement("div")
+            div.className = "attachment"
+            attachmentList.appendChild(div)
+
+            div.innerHTML = media.mimeType + ": " + media.name + " <a href='" + media.url + "'>" + media.url + "</a>"
+            
+            var removeDiv = document.createElement("div")
+            removeDiv.style.float = "right"
+            removeDiv.innerHTML = "Remove (X)"
+            div.appendChild(removeDiv)
+            
+            removeDiv.onclick = () => {
+                attachmentList.removeChild(div)
+                var i = gig.attachments.indexOf(media)
+                if (i > -1) {
+                    gig.attachments.splice(i, 1)
+                }
+            }
+
+            var statusDiv = document.createElement("div")
+            statusDiv.style.float = "right"
+            div.appendChild(statusDiv)
+
+            return statusDiv
+        }
+
+        var uploadParameters = {
+            thingId: gig.id, 
+            div: dropZone,
+            onstartupload: media => {
+                if (!gig.attachments) {
+                    gig.attachments = []
+                }
+                gig.attachments.push(media)
+
+                var statusDiv = makeAttachmentEl(media)
+                statusDiv.innerHTML = "Uploading..."
+                return statusDiv
+            },
+            onfail: (media, statusDiv, message) => {
+                statusDiv.innerHTML = "<font color='red'>Error</font> " + message
+            },
+            onsuccess: (media, statusDiv) => {
+                statusDiv.innerHTML = "<font color='green'>Uploaded</font>" 
+            }
+        }
+        dndupload.setupDropZone(uploadParameters)
+            
+
         </script>
     
     </body>
