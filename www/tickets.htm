@@ -15,8 +15,15 @@
 			font-size: 1.25em;
 		}
 
-		button, input {
+		button {
 			font-size: 1.25em;
+		}
+
+		.buyer-input {
+			margin-bottom: 8px;
+			font-size: 16px;
+			padding: 12px;
+			line-height: 24px;
 		}
 
 		.main-body {
@@ -140,9 +147,9 @@
 		<div id="pay">
 			<h4>Basic Info</h4>	
 
-			<div class="buyer-input"><input id="buyer-name" placeholder="Your Name"></div>
-			<div class="buyer-input"><input id="buyer-email" placeholder="Confirmation Email"></div>
-			<div class="buyer-input"><input min="1" value="1" type="number" id="ticket-count"></div>
+			<div><input class="buyer-input" id="buyer-name" placeholder="Your Name"></div>
+			<div><input class="buyer-input" id="buyer-email" placeholder="Confirmation Email"></div>
+			<div><input class="buyer-input" min="1" value="1" type="number" id="ticket-count"></div>
 			<div>Total: $<span id="buyer-total"></span></div>
 			<h4>Credit Card Info</h4>
 
