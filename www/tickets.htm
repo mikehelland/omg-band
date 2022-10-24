@@ -175,11 +175,11 @@
 				Payment Success
 			</p>
 			<p>
-				You're all set!
+				<span id="buyer-receipt-name"></span>.
 			</p>
 
 			<p>
-				Create a session in your <a href="/apps/musicroom/controlpanel.htm">Music Room Control Panel</a> to get going.
+				See you at the show!
 			</p>
 		</div>
 		</div>
@@ -256,6 +256,9 @@
 			function finished() {
 				payDiv.style.display = "none"
 				finishedDiv.style.display = "block"
+
+				var receiptName = document.getElementById("buyer-receipt-name")
+				receiptName.innerHTML = buyerParams.ticketCount + " tickets for " + buyerParams.name + " (" + buyerParams.email + ")"
 			}
 
 			const idempotency_key = uuidv4();
@@ -350,7 +353,12 @@
 								payNowButton.disabled = false
 								paymentFailedDiv.innerHTML = "Payment failed. "
 								if (err.error) {
-									err.error.forEach(e => paymentFailedDiv.innerHTML += "<br>" + e.detail)
+									if (err.error.forEach) {
+										err.error.forEach(e => paymentFailedDiv.innerHTML += "<br>" + e.detail)
+									}
+									else {
+
+									}
 								}
 							});
 
